@@ -1,0 +1,49 @@
+cdkinfra/*.js
+!cdkinfra/jest.config.js
+cdkinfra/*.d.ts
+cdkinfra/node_modules
+
+# CDK asset staging directory
+cdkinfra/.cdk.staging
+cdkinfra/cdk.out
+
+
+### Vehicle Registration Service ###
+vehicle-registration-service/HELP.md
+vehicle-registration-service/.gradle
+vehicle-registration-service/build/
+!vehicle-registration-service/gradle/wrapper/gradle-wrapper.jar
+!vehicle-registration-service/src/main/**/build/
+!vehicle-registration-service/src/test/**/build/
+
+### STS ###
+vehicle-registration-service/.apt_generated
+vehicle-registration-service/.classpath
+vehicle-registration-service/.factorypath
+vehicle-registration-service/.project
+vehicle-registration-service/.settings
+vehicle-registration-service/.springBeans
+vehicle-registration-service/.sts4-cache
+vehicle-registration-service/bin/
+vehicle-registration-service/src/main/**/bin/
+vehicle-registration-service/src/test/**/bin/
+
+### IntelliJ IDEA ###
+vehicle-registration-service/.idea
+vehicle-registration-service/*.iws
+vehicle-registration-service/*.iml
+vehicle-registration-service/*.ipr
+vehicle-registration-service/out/
+!vehicle-registration-service/src/main/**/out/
+!vehicle-registration-service/src/test/**/out/
+
+### NetBeans ###
+vehicle-registration-service/nbproject/private/
+vehicle-registration-service/nbbuild/
+vehicle-registration-service/dist/
+vehicle-registration-service/nbdist/
+vehicle-registration-service/.nb-gradle/
+
+### VS Code ###
+vehicle-registration-service/.vscode/
+
