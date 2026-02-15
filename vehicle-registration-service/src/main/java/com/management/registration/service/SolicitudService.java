@@ -12,7 +12,6 @@ import com.management.registration.validator.RutValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,8 +25,7 @@ import java.util.UUID;
 @Slf4j
 public class SolicitudService {
 
-    @Autowired
-    private SolicitudRepository solicitudRepository;
+    private final SolicitudRepository solicitudRepository;
 
     /**
      * Crea una nueva solicitud de inscripción
@@ -52,7 +50,15 @@ public class SolicitudService {
         // 4. Crear entidad
         Solicitud solicitud = mapearAEntidad(request, patenteLimpia, rutLimpio);
 
-
+        // 5. Guardar en base de datos
+        try {
+            Solicitud solicitudGuardada = solicitudRepository.save(solicitud);
+            log.info("Solicitud creada exitosamente con ID: {}", solicitudGuardada.getId());
+            return mapearARespuesta(solicitudGuardada);
+        } catch (DataIntegrityViolationException e) {
+            log.error("Error de integridad al guardar solicitud: {}", e.getMessage());
+            throw new PatenteYaRegistradaException(patenteLimpia);
+        }
     }
 
     /**

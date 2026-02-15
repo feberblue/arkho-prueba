@@ -1,7 +1,15 @@
 package com.management.registration.dto.request;
 
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CrearSolicitudRequest {
     // Datos del Propietario
     @NotBlank(message = "El nombre del propietario es obligatorio")
