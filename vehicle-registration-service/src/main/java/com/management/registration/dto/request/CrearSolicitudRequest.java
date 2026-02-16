@@ -1,7 +1,17 @@
 package com.management.registration.dto.request;
 
+import com.management.registration.validator.ValidPatente;
+import com.management.registration.validator.ValidRut;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CrearSolicitudRequest {
     // Datos del Propietario
     @NotBlank(message = "El nombre del propietario es obligatorio")
@@ -9,6 +19,7 @@ public class CrearSolicitudRequest {
     private String nombrePropietario;
 
     @NotBlank(message = "El RUT es obligatorio")
+    @ValidRut
     private String rut;
 
     @NotBlank(message = "El email es obligatorio")
@@ -22,6 +33,7 @@ public class CrearSolicitudRequest {
 
     // Datos del Vehículo
     @NotBlank(message = "La patente es obligatoria")
+    @ValidPatente
     private String patente;
 
     @NotBlank(message = "La marca es obligatoria")
@@ -34,7 +46,7 @@ public class CrearSolicitudRequest {
 
     @NotNull(message = "El año es obligatorio")
     @Min(value = 1900, message = "El año debe ser mayor a 1900")
-    @Max(value = 2026, message = "El año no puede ser futuro")
+    @Max(value = 2027, message = "El año no puede ser futuro")
     private Integer anio;
 
     @Size(max = 30, message = "El color no puede exceder 30 caracteres")
@@ -45,4 +57,32 @@ public class CrearSolicitudRequest {
 
     @Size(max = 500, message = "Las observaciones no pueden exceder 500 caracteres")
     private String observaciones;
+
+    public void setNombrePropietario(String nombrePropietario) {
+        this.nombrePropietario = nombrePropietario != null ? nombrePropietario.trim() : null;
+    }
+
+    public void setPatente(String patente) {
+        this.patente = patente != null ? patente.trim().toUpperCase() : null;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca != null ? marca.trim() : null;
+    }
+
+    public void setModelo(String modelo) {
+        this.modelo = modelo != null ? modelo.trim() : null;
+    }
+
+    public void setColor(String color) {
+        this.color = color != null ? color.trim() : null;
+    }
+
+    public void setTipoVehiculo(String tipoVehiculo) {
+        this.tipoVehiculo = tipoVehiculo != null ? tipoVehiculo.trim() : null;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones != null ? observaciones.trim() : null;
+    }
 }
