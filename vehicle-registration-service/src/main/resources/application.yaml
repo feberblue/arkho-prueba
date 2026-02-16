@@ -39,6 +39,19 @@ server:
     include-stacktrace: never
     include-exception: false
 
+# AWS Configuration
+aws:
+  region: ${AWS_REGION:us-east-1}
+
+  s3:
+    enabled: ${AWS_S3_ENABLED:false}
+    bucket-name: ${AWS_S3_BUCKET:fleet-documents}
+
+  sqs:
+    enabled: ${AWS_SQS_ENABLED:false}
+    queue-url: ${AWS_SQS_QUEUE_URL:}
+
+
 # Logging
 logging:
   level:

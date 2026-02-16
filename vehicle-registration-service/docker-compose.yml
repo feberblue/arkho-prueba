@@ -1,4 +1,5 @@
 services:
+  # Base de datos PostgreSQL
   postgres:
     image: postgres:15-alpine
     container_name: fleet-postgres
@@ -15,7 +16,37 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - fleet-network
 
+  # LocalStack - Simula servicios AWS localmente
+  localstack:
+    image: localstack/localstack:latest
+    container_name: fleet-localstack
+    ports:
+      - "4566:4566"            # LocalStack Gateway
+      - "4510-4559:4510-4559"  # Servicios externos
+    environment:
+      - SERVICES=s3,sqs,secretsmanager
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+    volumes:
+      - "./localstack-init:/etc/localstack/init/ready.d"
+      - localstack_data:/tmp/localstack
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fleet-network
+
+  # Aplicación Java Spring Boot
   app:
     build:
       context: .
@@ -24,14 +55,40 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      localstack:
+        condition: service_healthy
     environment:
+      # Spring
       SPRING_PROFILES_ACTIVE: local
+      
+      # Database
       DB_URL: jdbc:postgresql://postgres:5432/fleet_management
       DB_USERNAME: postgres
-      DB_PASSWORD: postgres
+      DB_PASSWORD: Admin123
+      
+      # AWS Configuration (LocalStack)
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_ENDPOINT_URL: http://localstack:4566
+      
+      # S3
+      AWS_S3_ENABLED: true
+      AWS_S3_BUCKET: fleet-documents
+      
+      # SQS
+      AWS_SQS_ENABLED: true
+      AWS_SQS_QUEUE_URL: http://localstack:4566/000000000000/fleet-solicitudes-queue
     ports:
       - "8080:8080"
     restart: unless-stopped
+    networks:
+      - fleet-network
 
 volumes:
   postgres_data:
+  localstack_data:
+
+networks:
+  fleet-network:
+    driver: bridge

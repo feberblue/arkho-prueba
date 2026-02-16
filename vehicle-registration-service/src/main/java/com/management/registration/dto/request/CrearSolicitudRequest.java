@@ -1,5 +1,7 @@
 package com.management.registration.dto.request;
 
+import com.management.registration.validator.ValidPatente;
+import com.management.registration.validator.ValidRut;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +19,7 @@ public class CrearSolicitudRequest {
     private String nombrePropietario;
 
     @NotBlank(message = "El RUT es obligatorio")
+    @ValidRut
     private String rut;
 
     @NotBlank(message = "El email es obligatorio")
@@ -30,6 +33,7 @@ public class CrearSolicitudRequest {
 
     // Datos del Vehículo
     @NotBlank(message = "La patente es obligatoria")
+    @ValidPatente
     private String patente;
 
     @NotBlank(message = "La marca es obligatoria")

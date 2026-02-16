@@ -3,6 +3,7 @@ package com.management.registration.service;
 import com.management.registration.dto.request.CrearSolicitudRequest;
 import com.management.registration.dto.response.SolicitudResponse;
 import com.management.registration.entity.Solicitud;
+import com.management.registration.event.EventPublisher;
 import com.management.registration.exception.PatenteYaRegistradaException;
 import com.management.registration.exception.SolicitudNotFoundException;
 import com.management.registration.repository.SolicitudRepository;
@@ -26,6 +27,7 @@ import java.util.UUID;
 public class SolicitudService {
 
     private final SolicitudRepository solicitudRepository;
+    private final EventPublisher eventPublisher;
 
     /**
      * Crea una nueva solicitud de inscripción
@@ -54,6 +56,9 @@ public class SolicitudService {
         try {
             Solicitud solicitudGuardada = solicitudRepository.save(solicitud);
             log.info("Solicitud creada exitosamente con ID: {}", solicitudGuardada.getId());
+
+            eventPublisher.publicarSolicitudCreada(solicitud);
+
             return mapearARespuesta(solicitudGuardada);
         } catch (DataIntegrityViolationException e) {
             log.error("Error de integridad al guardar solicitud: {}", e.getMessage());
